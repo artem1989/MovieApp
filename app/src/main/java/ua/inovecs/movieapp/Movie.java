@@ -1,10 +1,12 @@
 package ua.inovecs.movieapp;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Movie {
+public class Movie implements Serializable {
 
     @SerializedName("vote_count")
     private int voteCount;

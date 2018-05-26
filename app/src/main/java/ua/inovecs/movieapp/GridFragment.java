@@ -8,14 +8,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import java.util.List;
 
 import ua.inovecs.movieapp.databinding.GridFragmentBinding;
 
-public class GridFragment extends Fragment {
+public class GridFragment extends Fragment implements AdapterView.OnItemClickListener{
 
     private GridFragmentBinding binding;
+    private MovieViewModel viewModel;
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Movie movie = viewModel.getMovieList().getValue().get(position);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, DetailsFragment.Factory.newInstance(movie))
+                .addToBackStack(null)
+                .commit();
+    }
 
     public static class Factory {
         /**
@@ -37,14 +48,15 @@ public class GridFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GridFragmentBinding.inflate(inflater, container, false);
-        MovieViewModel model = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
-        model.getMovies().observe(this, this::updateGridView);
+        viewModel = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
+        viewModel.fetchMovies().observe(this, this::updateGridView);
         return binding.getRoot();
     }
 
     private void updateGridView(List<Movie> movies) {
         binding.gridView.setAdapter(new MovieAdapter(getActivity(), movies));
         binding.gridView.setOnScrollListener(new ScrollViewListener(getActivity()));
+        binding.gridView.setOnItemClickListener(this);
     }
 
 }

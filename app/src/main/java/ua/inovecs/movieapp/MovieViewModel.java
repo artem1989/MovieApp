@@ -17,9 +17,13 @@ public class MovieViewModel extends ViewModel {
 
     private static final String TAG = MovieViewModel.class.getSimpleName();
 
+    public MutableLiveData<List<Movie>> getMovieList() {
+        return movieList;
+    }
+
     private MutableLiveData<List<Movie>> movieList;
 
-    public LiveData<List<Movie>> getMovies() {
+    public LiveData<List<Movie>> fetchMovies() {
         if (movieList == null) {
             movieList = new MutableLiveData<>();
             loadMovies();

@@ -13,6 +13,7 @@ import java.util.List;
 import static android.widget.ImageView.ScaleType.CENTER_CROP;
 
 final class MovieAdapter extends BaseAdapter {
+
     private final Context context;
     private final List<Movie> movies;
 
