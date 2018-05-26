@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
+
     defaultConfig {
         applicationId "ua.inovecs.movieapp"
         minSdkVersion 21
@@ -10,16 +11,23 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    dataBinding {
+        enabled = true
+    }
+
 }
 
 dependencies {
@@ -47,4 +55,6 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:${rootProject.ext.okhttp3_version}"
     compile "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofit2_version}"
     compile "com.squareup.retrofit2:converter-gson:${rootProject.ext.retrofit2_version}"
+
+    compile 'com.github.ceryle:FitGridView:v1.0.5'
 }

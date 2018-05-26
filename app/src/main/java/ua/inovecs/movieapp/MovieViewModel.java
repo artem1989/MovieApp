@@ -40,8 +40,7 @@ public class MovieViewModel extends ViewModel {
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-
-                //finally we are setting the list to our MutableLiveData
+                if(response.body() != null)
                 movieList.setValue(response.body().getResults());
             }
 
