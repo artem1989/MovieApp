@@ -9,7 +9,7 @@ public class ScrollViewListener implements AbsListView.OnScrollListener {
 
     private final Context context;
 
-    public ScrollViewListener(Context context) {
+    ScrollViewListener(Context context) {
         this.context = context;
     }
 

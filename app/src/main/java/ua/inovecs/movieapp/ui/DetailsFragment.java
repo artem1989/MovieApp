@@ -1,5 +1,6 @@
 package ua.inovecs.movieapp.ui;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -70,7 +71,7 @@ public class DetailsFragment extends Fragment {
         Calendar releaseDate = Calendar.getInstance();
         releaseDate.setTime(movie.getReleaseDate());
         binding.releaseYear.setText(String.valueOf(releaseDate.get(Calendar.YEAR)));
-        binding.toolbarView.setTitleTextColor(getContext().getResources().getColor(R.color.colorWhite));
+        binding.toolbarView.setTitleTextColor(Color.parseColor("#FFFFFF"));
         binding.toolbarView.setTitle(movie.getTitle());
     }
 }
