@@ -1,8 +1,11 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import ua.inovecs.movieapp.Movie;
+
 
 public class MovieResponse {
 

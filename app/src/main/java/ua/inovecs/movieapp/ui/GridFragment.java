@@ -1,4 +1,4 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import android.widget.AdapterView;
 
 import java.util.List;
 
+import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.viewmodel.MovieViewModel;
+import ua.inovecs.movieapp.R;
 import ua.inovecs.movieapp.databinding.GridFragmentBinding;
 
 public class GridFragment extends Fragment implements AdapterView.OnItemClickListener{

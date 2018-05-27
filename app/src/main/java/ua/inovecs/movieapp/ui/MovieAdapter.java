@@ -1,4 +1,4 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.ui;
 
 import android.content.Context;
 import android.view.View;
@@ -9,6 +9,11 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.repository.Data;
+import ua.inovecs.movieapp.R;
+
 
 import static android.widget.ImageView.ScaleType.CENTER_CROP;
 
@@ -31,7 +36,6 @@ final class MovieAdapter extends BaseAdapter {
             view.setAdjustViewBounds(true);
         }
 
-        // Get the image URL for the current position.
         Movie movie = getItem(position);
 
         // Trigger the download of the URL asynchronously into the image view.

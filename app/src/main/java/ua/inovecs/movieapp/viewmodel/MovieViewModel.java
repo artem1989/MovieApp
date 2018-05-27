@@ -1,9 +1,10 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
+
 
 import java.util.List;
 
@@ -12,16 +13,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.model.MovieResponse;
+import ua.inovecs.movieapp.repository.Data;
+import ua.inovecs.movieapp.repository.MovieRepository;
 
 public class MovieViewModel extends ViewModel {
 
     private static final String TAG = MovieViewModel.class.getSimpleName();
 
+    private MutableLiveData<List<Movie>> movieList;
+
     public MutableLiveData<List<Movie>> getMovieList() {
         return movieList;
     }
-
-    private MutableLiveData<List<Movie>> movieList;
 
     public LiveData<List<Movie>> fetchMovies() {
         if (movieList == null) {

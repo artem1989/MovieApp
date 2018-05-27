@@ -1,4 +1,4 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.ui;
 
 import android.content.Context;
 import android.widget.AbsListView;

@@ -1,4 +1,4 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.repository;
 
 public interface Data {
     String BASE_URL = "https://api.themoviedb.org/3/";

@@ -1,6 +1,5 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.ui;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
+
+import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.R;
+
 import ua.inovecs.movieapp.databinding.DetailsFragmentBinding;
+import ua.inovecs.movieapp.repository.Data;
 
 public class DetailsFragment extends Fragment {
 
@@ -52,6 +57,14 @@ public class DetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Movie movie = (Movie) getArguments().getSerializable("movie");
-        binding.details.setText(movie.getOverview());
+        Picasso.get().load(Data.BASE + movie.getBackDropPath()) //
+                .placeholder(R.drawable.placeholder) //
+                .error(R.drawable.error) //
+                .fit() //
+                .tag(getActivity()) //
+                .into(binding.logo);
+        binding.description.setText(movie.getOverview());
+        binding.rating.setText(String.format("%s%s", String.valueOf(movie.getVoteAverage()), getString(R.string.from)));
+        binding.releaseYear.setText(String.valueOf(movie.getReleaseDate().getYear()));
     }
 }

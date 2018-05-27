@@ -1,10 +1,11 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.ui;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import ua.inovecs.movieapp.R;
 import ua.inovecs.movieapp.databinding.MainActivityBinding;
 
 public class MainActivity extends AppCompatActivity {
