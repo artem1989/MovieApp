@@ -16,7 +16,7 @@ public class Repository {
 
     private static final String TAG = Repository.class.getSimpleName();
 
-    MovieApi repository = getRetrofit(Data.BASE_URL).create(MovieApi.class);
+    private MovieApi api = getRetrofit(Data.BASE_URL).create(MovieApi.class);
 
     private OnResponseListener listener;
 
@@ -25,7 +25,7 @@ public class Repository {
     }
 
     public void fetchMovies() {
-        Call<MovieResponse> call = repository.getPopularMovies(Data.API_KEY);
+        Call<MovieResponse> call = api.getPopularMovies(Data.API_KEY);
 
         call.enqueue(new Callback<MovieResponse>() {
             @Override

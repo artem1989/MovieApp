@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
+
 import ua.inovecs.movieapp.Movie;
 import ua.inovecs.movieapp.R;
 
@@ -57,14 +59,18 @@ public class DetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Movie movie = (Movie) getArguments().getSerializable("movie");
-        Picasso.get().load(Data.BASE + movie.getBackDropPath()) //
-                .placeholder(R.drawable.placeholder) //
-                .error(R.drawable.error) //
-                .fit() //
-                .tag(getActivity()) //
+        Picasso.get().load(Data.BASE + movie.getBackDropPath())
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error)
+                .fit()
+                .tag(getActivity())
                 .into(binding.logo);
         binding.description.setText(movie.getOverview());
         binding.rating.setText(String.format("%s%s", String.valueOf(movie.getVoteAverage()), getString(R.string.from)));
-        binding.releaseYear.setText(String.valueOf(movie.getReleaseDate().getYear()));
+        Calendar releaseDate = Calendar.getInstance();
+        releaseDate.setTime(movie.getReleaseDate());
+        binding.releaseYear.setText(String.valueOf(releaseDate.get(Calendar.YEAR)));
+        binding.toolbarView.setTitleTextColor(getContext().getResources().getColor(R.color.colorWhite));
+        binding.toolbarView.setTitle(movie.getTitle());
     }
 }

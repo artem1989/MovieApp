@@ -4,4 +4,5 @@
   <color name="colorPrimary">#808080</color>
   <color name="colorAccent">#FF4081</color>
   <color name="colorCyan">#009899</color>
+  <color name="colorWhite">#FFFFFF</color>
 </resources>

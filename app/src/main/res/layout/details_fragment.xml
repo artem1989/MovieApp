@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools">
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
@@ -18,7 +17,7 @@
       android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
       app:contentInsetStartWithNavigation="4dp"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
       android:id="@+id/logo"
@@ -26,6 +25,8 @@
       android:layout_height="240dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="16dp"
+      android:adjustViewBounds="true"
+      android:scaleType="centerCrop"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/toolbarView"
       app:srcCompat="@drawable/placeholder" />
@@ -36,7 +37,6 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginTop="16dp"
-      android:text="Release year"
       app:layout_constraintStart_toEndOf="@+id/logo"
       app:layout_constraintTop_toTopOf="@+id/logo" />
 
@@ -46,7 +46,6 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginTop="48dp"
-      android:text="Scores"
       app:layout_constraintStart_toEndOf="@+id/logo"
       app:layout_constraintTop_toBottomOf="@+id/release_year" />
 
@@ -56,7 +55,7 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginTop="32dp"
-      android:text="Button"
+      android:text="@string/button"
       app:layout_constraintStart_toEndOf="@+id/logo"
       app:layout_constraintTop_toBottomOf="@+id/rating" />
 
@@ -64,10 +63,10 @@
       android:id="@+id/description"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="8dp"
-      android:layout_marginStart="8dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginStart="16dp"
       android:layout_marginTop="16dp"
-      android:text="Description"
+      android:text="@string/app_name"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/logo" />
@@ -84,12 +83,11 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/description">
-    </LinearLayout>
+      app:layout_constraintTop_toBottomOf="@+id/description"/>
 
     <android.support.v7.widget.RecyclerView
-      android:layout_width="395dp"
-      android:layout_height="307dp"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
       android:layout_marginEnd="8dp"
       android:layout_marginStart="8dp"
       android:layout_marginTop="16dp"
