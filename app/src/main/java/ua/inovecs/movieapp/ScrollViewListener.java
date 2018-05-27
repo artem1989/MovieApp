@@ -26,6 +26,5 @@ public class ScrollViewListener implements AbsListView.OnScrollListener {
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                          int totalItemCount) {
-        // Do nothing.
     }
 }
