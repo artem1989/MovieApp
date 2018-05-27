@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, GridFragment.Factory.newInstance())
-                .addToBackStack(null)
                 .commit();
     }
 

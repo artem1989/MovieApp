@@ -38,12 +38,11 @@ final class MovieAdapter extends BaseAdapter {
 
         Movie movie = getItem(position);
 
-        // Trigger the download of the URL asynchronously into the image view.
-        Picasso.get().load(Data.BASE + movie.getBackDropPath()) //
-                .placeholder(R.drawable.placeholder) //
-                .error(R.drawable.error) //
+        Picasso.get().load(Data.BASE + movie.getBackDropPath())
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error)
                 .fit() //
-                .tag(context) //
+                .tag(context)
                 .into(view);
 
         return view;

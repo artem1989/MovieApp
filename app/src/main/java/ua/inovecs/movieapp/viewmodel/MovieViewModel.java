@@ -3,61 +3,31 @@ package ua.inovecs.movieapp.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
-
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import ua.inovecs.movieapp.Movie;
-import ua.inovecs.movieapp.model.MovieResponse;
-import ua.inovecs.movieapp.repository.Data;
-import ua.inovecs.movieapp.repository.MovieRepository;
+import ua.inovecs.movieapp.repository.Repository;
 
-public class MovieViewModel extends ViewModel {
+public class MovieViewModel extends ViewModel implements Repository.OnResponseListener {
 
-    private static final String TAG = MovieViewModel.class.getSimpleName();
+    private Repository repository;
+    private MutableLiveData<List<Movie>> movieList = new MutableLiveData<>();
 
-    private MutableLiveData<List<Movie>> movieList;
+    public MovieViewModel() {
+        this.repository = new Repository(this);
+    }
 
-    public MutableLiveData<List<Movie>> getMovieList() {
+    public LiveData<List<Movie>> getMovieList() {
         return movieList;
     }
 
-    public LiveData<List<Movie>> fetchMovies() {
-        if (movieList == null) {
-            movieList = new MutableLiveData<>();
-            loadMovies();
-        }
-
-        return movieList;
+    public void fetchMovies() {
+        repository.fetchMovies();
     }
 
-    private void loadMovies() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Data.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        MovieRepository repository = retrofit.create(MovieRepository.class);
-        Call<MovieResponse> call = repository.getMovies(Data.API_KEY);
-
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if(response.body() != null)
-                movieList.setValue(response.body().getResults());
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Log.e(TAG, "Network error occured!");
-            }
-        });
+    @Override
+    public void onResponse(List<Movie> movies) {
+        movieList.setValue(movies);
     }
-
 }

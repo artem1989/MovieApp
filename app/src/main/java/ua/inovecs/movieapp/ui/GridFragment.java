@@ -61,7 +61,8 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GridFragmentBinding.inflate(inflater, container, false);
         viewModel = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
-        viewModel.fetchMovies().observe(this, this::updateGridView);
+        viewModel.getMovieList().observe(this, this::updateGridView);
+        viewModel.fetchMovies();
         return binding.getRoot();
     }
 
