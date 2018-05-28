@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements GridFragment.OnCo
 
         boolean isMasterDetailsPage = findViewById(R.id.activity_main_root_container) != null;
         getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in_medium, R.anim.fade_out)
                 .replace(isMasterDetailsPage ? R.id.activity_main_grid_container : R.id.content_frame, GridFragment.Factory.newInstance())
                 .commit();
 
