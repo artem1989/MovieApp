@@ -11,7 +11,7 @@ public class Movie implements Serializable {
     @SerializedName("vote_count")
     private int voteCount;
     @SerializedName("id")
-    private long id;
+    private int id;
 
     private boolean video;
 
@@ -51,11 +51,11 @@ public class Movie implements Serializable {
         this.voteCount = voteCount;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

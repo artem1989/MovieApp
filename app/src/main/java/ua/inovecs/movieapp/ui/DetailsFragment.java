@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import ua.inovecs.movieapp.Movie;
 import ua.inovecs.movieapp.R;
 
 import ua.inovecs.movieapp.databinding.DetailsFragmentBinding;
+import ua.inovecs.movieapp.model.VideoResponse;
 import ua.inovecs.movieapp.repository.Data;
 import ua.inovecs.movieapp.viewmodel.MovieViewModel;
 
@@ -59,6 +61,9 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DetailsFragmentBinding.inflate(inflater, container, false);
         viewModel = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
+        viewModel.getVideoList().observe(this, this::updateRecyclerView);
+        Movie movie = (Movie) getArguments().getSerializable("movie");
+        viewModel.fetchMovieVideo(movie.getId());
         return binding.getRoot();
     }
 
@@ -79,5 +84,11 @@ public class DetailsFragment extends Fragment {
         binding.releaseYear.setText(String.valueOf(releaseDate.get(Calendar.YEAR)));
         binding.toolbarView.setTitleTextColor(Color.parseColor("#FFFFFF"));
         binding.toolbarView.setTitle(movie.getTitle());
+    }
+
+    private void updateRecyclerView(VideoResponse response) {
+        binding.trailers.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.trailers.setHasFixedSize(true);
+        binding.trailers.setAdapter(new TrailersAdapter(response.getResults()));
     }
 }
