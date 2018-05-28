@@ -6,13 +6,13 @@
   android:orientation="horizontal" >
 
   <FrameLayout
-    android:id="@+id/activity_main_image_selector_container"
+    android:id="@+id/activity_main_grid_container"
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_weight="40" />
 
   <FrameLayout
-    android:id="@+id/activity_main_image_rotate_container"
+    android:id="@+id/activity_main_details_container"
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_weight="60" />

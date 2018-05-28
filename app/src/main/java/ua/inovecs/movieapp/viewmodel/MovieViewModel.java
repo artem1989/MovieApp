@@ -13,6 +13,7 @@ public class MovieViewModel extends ViewModel implements Repository.OnResponseLi
 
     private Repository repository;
     private MutableLiveData<List<Movie>> movieList = new MutableLiveData<>();
+    private MutableLiveData<Boolean> masterDetailsPage = new MutableLiveData<>();
 
     public MovieViewModel() {
         this.repository = new Repository(this);
@@ -20,6 +21,10 @@ public class MovieViewModel extends ViewModel implements Repository.OnResponseLi
 
     public LiveData<List<Movie>> getMovieList() {
         return movieList;
+    }
+
+    public MutableLiveData<Boolean> getMasterDetailsPage() {
+        return masterDetailsPage;
     }
 
     public void fetchMovies() {

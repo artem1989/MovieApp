@@ -22,19 +22,20 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private GridFragmentBinding binding;
     private MovieViewModel viewModel;
+    private OnContentLoadedListener listener;
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Movie movie = viewModel.getMovieList().getValue().get(position);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, DetailsFragment.Factory.newInstance(movie))
+                .replace(viewModel.getMasterDetailsPage().getValue() ? R.id.activity_main_details_container : R.id.content_frame, DetailsFragment.Factory.newInstance(movie))
                 .addToBackStack(null)
                 .commit();
     }
 
     public static class Factory {
         /**
-         * Create a new {@link GridFragment} for the supplied start page
+         * Create a new {@link GridFragment} for the actual start page
          */
         public static GridFragment newInstance() {
             Bundle args = new Bundle(1);
@@ -55,12 +56,14 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        listener = (OnContentLoadedListener) getActivity();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GridFragmentBinding.inflate(inflater, container, false);
         viewModel = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
+        viewModel.getMasterDetailsPage().setValue(getActivity().findViewById(R.id.activity_main_root_container) != null);
         viewModel.getMovieList().observe(this, this::updateGridView);
         viewModel.fetchMovies();
         return binding.getRoot();
@@ -69,7 +72,13 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
     private void updateGridView(List<Movie> movies) {
         binding.gridView.setAdapter(new MovieAdapter(getActivity(), movies));
         binding.gridView.setOnScrollListener(new ScrollViewListener(getActivity()));
+        binding.gridView.setNumColumns(viewModel.getMasterDetailsPage().getValue() ? 3 : 2);
         binding.gridView.setOnItemClickListener(this);
+        listener.onContentLoaded(movies);
+    }
+
+    interface OnContentLoadedListener {
+        void onContentLoaded(List<Movie> movies);
     }
 
 }

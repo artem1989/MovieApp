@@ -41,7 +41,7 @@ final class MovieAdapter extends BaseAdapter {
         Picasso.get().load(Data.BASE + movie.getBackDropPath())
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
-                .fit() //
+                .fit()
                 .tag(context)
                 .into(view);
 

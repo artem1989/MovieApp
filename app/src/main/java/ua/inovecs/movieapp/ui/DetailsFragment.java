@@ -1,5 +1,6 @@
 package ua.inovecs.movieapp.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,14 +20,16 @@ import ua.inovecs.movieapp.R;
 
 import ua.inovecs.movieapp.databinding.DetailsFragmentBinding;
 import ua.inovecs.movieapp.repository.Data;
+import ua.inovecs.movieapp.viewmodel.MovieViewModel;
 
 public class DetailsFragment extends Fragment {
 
     private DetailsFragmentBinding binding;
+    private MovieViewModel viewModel;
 
     public static class Factory {
         /**
-         * Create a new {@link GridFragment} for the supplied pageId
+         * Create a new {@link DetailsFragment} for the supplied movie instance
          */
         public static DetailsFragment newInstance(Movie movie) {
             Bundle args = new Bundle(1);
@@ -40,9 +43,11 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.details);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(!viewModel.getMasterDetailsPage().getValue()) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.details);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -53,6 +58,7 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DetailsFragmentBinding.inflate(inflater, container, false);
+        viewModel = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
         return binding.getRoot();
     }
 

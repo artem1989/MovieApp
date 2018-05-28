@@ -1,25 +1,26 @@
 package ua.inovecs.movieapp.ui;
 
-import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import java.util.List;
+
+import ua.inovecs.movieapp.Movie;
 import ua.inovecs.movieapp.R;
-import ua.inovecs.movieapp.databinding.MainActivityBinding;
 
-public class MainActivity extends AppCompatActivity {
-
-    MainActivityBinding binding;
+public class MainActivity extends AppCompatActivity implements GridFragment.OnContentLoadedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
+        setContentView(R.layout.main_activity);
 
+        boolean isMasterDetailsPage = findViewById(R.id.activity_main_root_container) != null;
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, GridFragment.Factory.newInstance())
+                .replace(isMasterDetailsPage ? R.id.activity_main_grid_container : R.id.content_frame, GridFragment.Factory.newInstance())
                 .commit();
+
     }
 
     @Override
@@ -33,4 +34,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onContentLoaded(List<Movie> movies) {
+        if (findViewById(R.id.activity_main_root_container) != null)
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.activity_main_details_container, DetailsFragment.Factory.newInstance(movies.get(0)))
+                    .commit();
+    }
 }
