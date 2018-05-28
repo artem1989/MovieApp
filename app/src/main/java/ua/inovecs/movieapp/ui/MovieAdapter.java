@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.repository.Data;
 import ua.inovecs.movieapp.R;
 

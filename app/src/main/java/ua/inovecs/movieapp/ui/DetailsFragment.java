@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
-import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.R;
 
 import ua.inovecs.movieapp.databinding.DetailsFragmentBinding;

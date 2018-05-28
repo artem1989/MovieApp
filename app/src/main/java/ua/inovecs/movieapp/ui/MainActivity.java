@@ -6,7 +6,7 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.R;
 
 public class MainActivity extends AppCompatActivity implements GridFragment.OnContentLoadedListener {

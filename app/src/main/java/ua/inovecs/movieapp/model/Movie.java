@@ -1,4 +1,4 @@
-package ua.inovecs.movieapp;
+package ua.inovecs.movieapp.model;
 
 import com.google.gson.annotations.SerializedName;
 

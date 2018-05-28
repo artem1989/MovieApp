@@ -13,7 +13,7 @@ import android.widget.AdapterView;
 
 import java.util.List;
 
-import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.viewmodel.MovieViewModel;
 import ua.inovecs.movieapp.R;
 import ua.inovecs.movieapp.databinding.GridFragmentBinding;

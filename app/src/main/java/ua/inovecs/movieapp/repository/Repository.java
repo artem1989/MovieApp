@@ -1,5 +1,7 @@
 package ua.inovecs.movieapp.repository;
 
+import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -9,7 +11,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ua.inovecs.movieapp.Movie;
+import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.model.MovieResponse;
 import ua.inovecs.movieapp.model.VideoDetails;
 import ua.inovecs.movieapp.model.VideoResponse;
@@ -23,14 +25,14 @@ public class Repository {
     private static final String APPEND_TO_RESPONSE = "append_to_response";
     private static final String VIDEOS = "videos";
 
-    private MovieApi api = getRetrofit(Data.BASE_URL).create(MovieApi.class);
-
+    private MovieApi api;
     private OnResponseListener listener;
     private OnVideoResponseListener onVideoResponseListener;
 
-    public Repository(OnResponseListener onResponseListener, OnVideoResponseListener listener) {
+    public Repository(Context context, OnResponseListener onResponseListener, OnVideoResponseListener listener) {
         this.listener = onResponseListener;
         this.onVideoResponseListener = listener;
+        api = getRetrofit(Data.BASE_URL, context).create(MovieApi.class);
     }
 
     public void fetchMovies() {

@@ -55,6 +55,7 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:${rootProject.ext.okhttp3_version}"
     compile "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofit2_version}"
     compile "com.squareup.retrofit2:converter-gson:${rootProject.ext.retrofit2_version}"
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
     compile 'com.github.ceryle:FitGridView:v1.0.5'
 }
