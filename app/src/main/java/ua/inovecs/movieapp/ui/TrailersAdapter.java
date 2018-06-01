@@ -38,14 +38,13 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ViewHo
 
     @NonNull
     @Override
-    public TrailersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TrailersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(viewGroup);
-        return viewHolder;
+        return new ViewHolder(viewGroup);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bindData(videos.get(position));
     }
 

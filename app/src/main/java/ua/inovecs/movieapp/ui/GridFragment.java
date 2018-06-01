@@ -24,15 +24,13 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
     private GridFragmentBinding binding;
     private MovieViewModel viewModel;
     private OnContentLoadedListener listener;
+    private MainNavigator navigator;
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Movie movie = viewModel.getMovieList().getValue().get(position);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.fade_in_medium, R.anim.fade_out)
-                .replace(viewModel.getMasterDetailsPage().getValue() ? R.id.activity_main_details_container : R.id.content_frame, DetailsFragment.Factory.newInstance(movie))
-                .addToBackStack(null)
-                .commit();
+        int containerId = viewModel.getMasterDetailsPage().getValue() ? R.id.activity_main_details_container : R.id.content_frame;
+        navigator.navigateTo(containerId, DetailsFragment.Factory.newInstance(movie), true);
     }
 
     public static class Factory {
@@ -58,6 +56,7 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        navigator = new MainNavigator(getActivity().getSupportFragmentManager());
         listener = (OnContentLoadedListener) getActivity();
     }
 

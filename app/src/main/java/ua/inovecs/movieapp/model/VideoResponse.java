@@ -9,7 +9,6 @@ public class VideoResponse {
     public List<Video> getResults() {
         return results;
     }
-
     public void setResults(List<Video> results) {
         this.results = results;
     }

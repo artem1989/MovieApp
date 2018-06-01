@@ -15,13 +15,10 @@ public class MainActivity extends AppCompatActivity implements GridFragment.OnCo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        navigator = new MainNavigator(getSupportFragmentManager());
 
-        boolean isMasterDetailsPage = findViewById(R.id.activity_main_root_container) != null;
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.fade_in_medium, R.anim.fade_out)
-                .replace(isMasterDetailsPage ? R.id.activity_main_grid_container : R.id.content_frame, GridFragment.Factory.newInstance())
-                .commit();
-
+        int containerId = findViewById(R.id.activity_main_root_container) != null ? R.id.activity_main_grid_container : R.id.content_frame;
+        navigator.navigateTo(containerId, GridFragment.Factory.newInstance(), false);
     }
 
     @Override
@@ -37,9 +34,11 @@ public class MainActivity extends AppCompatActivity implements GridFragment.OnCo
 
     @Override
     public void onContentLoaded(List<Movie> movies) {
-        if (findViewById(R.id.activity_main_root_container) != null)
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.activity_main_details_container, DetailsFragment.Factory.newInstance(movies.get(0)))
-                    .commit();
+        if (findViewById(R.id.activity_main_root_container) != null){
+            navigator.navigateTo(R.id.activity_main_details_container, DetailsFragment.Factory.newInstance(movies.get(0)), false);
+        }
+
     }
+
+    private MainNavigator navigator;
 }
