@@ -3,6 +3,7 @@ package ua.inovecs.movieapp.ui;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import ua.inovecs.movieapp.model.Movie;
+import ua.inovecs.movieapp.repository.Data;
 import ua.inovecs.movieapp.viewmodel.MovieViewModel;
 import ua.inovecs.movieapp.R;
 import ua.inovecs.movieapp.databinding.GridFragmentBinding;
@@ -31,7 +33,8 @@ public class GridFragment extends DaggerFragment implements AdapterView.OnItemCl
 
     @Inject
     MainNavigator navigator;
-
+    @Inject
+    SharedPreferences mPrefs;
     @Inject
     ViewModelProvider.Factory mModelFactory;
 
@@ -65,7 +68,7 @@ public class GridFragment extends DaggerFragment implements AdapterView.OnItemCl
     public void onResume() {
         super.onResume();
         DecorationInfo info = new DecorationInfo();
-        info.setShouldDecorate(getActivity().findViewById(R.id.activity_main_root_container) != null);
+        info.setShouldDecorate(!mPrefs.getBoolean(Data.DEVICE_TYPE_KEY, false));
         info.setShowBackArrow(false);
         info.setTitleResourceId(R.string.pop_movie);
         listener.decorate(info);
@@ -94,9 +97,8 @@ public class GridFragment extends DaggerFragment implements AdapterView.OnItemCl
         binding.swipeRefreshLayout.setRefreshing(false);
         binding.gridView.setAdapter(new MovieAdapter(getActivity(), movies));
         binding.gridView.setOnScrollListener(new ScrollViewListener(getActivity()));
-        boolean isMasterDetailsPage = getActivity().findViewById(R.id.activity_main_root_container) != null;
-        binding.gridView.setNumColumns(isMasterDetailsPage ? 3 : 2);
-        if(isMasterDetailsPage) {
+        binding.gridView.setNumColumns(mPrefs.getBoolean(Data.DEVICE_TYPE_KEY, false) ? 3 : 2);
+        if(mPrefs.getBoolean(Data.DEVICE_TYPE_KEY, false)) {
             navigator.navigateTo(R.id.activity_main_details_container, DetailsFragment.Factory.newInstance(movies.get(0)), false);
         }
         binding.gridView.setOnItemClickListener(this);

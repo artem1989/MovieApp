@@ -3,6 +3,7 @@ package ua.inovecs.movieapp.ui;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,6 +37,9 @@ public class DetailsFragment extends DaggerFragment {
     @Inject
     ViewModelProvider.Factory mModelFactory;
 
+    @Inject
+    SharedPreferences mPrefs;
+
     private DetailsFragmentBinding binding;
     OnToolbarDecoratorListener listener;
 
@@ -56,7 +60,7 @@ public class DetailsFragment extends DaggerFragment {
     public void onResume() {
         super.onResume();
         DecorationInfo info = new DecorationInfo();
-        info.setShouldDecorate(getActivity().findViewById(R.id.activity_main_root_container) == null);
+        info.setShouldDecorate(!mPrefs.getBoolean(Data.DEVICE_TYPE_KEY, false));
         info.setShowBackArrow(true);
         info.setTitleResourceId(R.string.details);
         listener.decorate(info);

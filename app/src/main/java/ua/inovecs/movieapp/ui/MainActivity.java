@@ -1,5 +1,6 @@
 package ua.inovecs.movieapp.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -7,6 +8,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import ua.inovecs.movieapp.R;
+import ua.inovecs.movieapp.repository.Data;
 
 public class MainActivity extends DaggerAppCompatActivity implements DetailsFragment.OnToolbarDecoratorListener {
 
@@ -15,6 +17,7 @@ public class MainActivity extends DaggerAppCompatActivity implements DetailsFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         boolean isMasterDetailsPage = findViewById(R.id.activity_main_root_container) != null;
+        mPrefs.edit().putBoolean(Data.DEVICE_TYPE_KEY, isMasterDetailsPage).apply();
         int containerId = isMasterDetailsPage ? R.id.activity_main_grid_container : R.id.content_frame;
         navigator.navigateTo(containerId, GridFragment.Factory.newInstance(), false);
     }
@@ -32,6 +35,9 @@ public class MainActivity extends DaggerAppCompatActivity implements DetailsFrag
 
     @Inject
     MainNavigator navigator;
+
+    @Inject
+    SharedPreferences mPrefs;
 
     @Override
     public void decorate(DecorationInfo info) {
