@@ -57,5 +57,11 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:${rootProject.ext.retrofit2_version}"
     compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
+    compile "com.google.dagger:dagger:${rootProject.ext.dagger_version}"
+    compile "com.google.dagger:dagger-android:${rootProject.ext.dagger_version}"
+    compile "com.google.dagger:dagger-android-support:${rootProject.ext.dagger_version}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.ext.dagger_version}"
+    annotationProcessor "com.google.dagger:dagger-android-processor:${rootProject.ext.dagger_version}"
+
     compile 'com.github.ceryle:FitGridView:v1.0.5'
 }

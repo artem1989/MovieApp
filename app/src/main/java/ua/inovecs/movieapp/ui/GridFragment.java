@@ -1,12 +1,13 @@
 package ua.inovecs.movieapp.ui;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +15,31 @@ import android.widget.AdapterView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.viewmodel.MovieViewModel;
 import ua.inovecs.movieapp.R;
 import ua.inovecs.movieapp.databinding.GridFragmentBinding;
 
-public class GridFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class GridFragment extends DaggerFragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private GridFragmentBinding binding;
     private MovieViewModel viewModel;
-    private OnContentLoadedListener listener;
-    private MainNavigator navigator;
+    private DetailsFragment.OnToolbarDecoratorListener listener;
+
+    @Inject
+    MainNavigator navigator;
+
+    @Inject
+    ViewModelProvider.Factory mModelFactory;
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Movie movie = viewModel.getMovieList().getValue().get(position);
-        int containerId = viewModel.getMasterDetailsPage().getValue() ? R.id.activity_main_details_container : R.id.content_frame;
+        boolean isMasterDetailsPage = getActivity().findViewById(R.id.activity_main_root_container) != null;
+        int containerId = isMasterDetailsPage ? R.id.activity_main_details_container : R.id.content_frame;
         navigator.navigateTo(containerId, DetailsFragment.Factory.newInstance(movie), true);
     }
 
@@ -46,28 +56,32 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (DetailsFragment.OnToolbarDecoratorListener) context;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.pop_movie);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        DecorationInfo info = new DecorationInfo();
+        info.setShouldDecorate(getActivity().findViewById(R.id.activity_main_root_container) != null);
+        info.setShowBackArrow(false);
+        info.setTitleResourceId(R.string.pop_movie);
+        listener.decorate(info);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        navigator = new MainNavigator(getActivity().getSupportFragmentManager());
-        listener = (OnContentLoadedListener) getActivity();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GridFragmentBinding.inflate(inflater, container, false);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-        viewModel = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
-        viewModel.getMasterDetailsPage().setValue(getActivity().findViewById(R.id.activity_main_root_container) != null);
-        viewModel.getMovieList().observe(this, this::updateGridView);
-        viewModel.fetchMovies();
+        viewModel = ViewModelProviders.of(this, mModelFactory).get(MovieViewModel.class);
+        viewModel.fetchMovies().observe(this, this::updateGridView);
         return binding.getRoot();
     }
 
@@ -80,13 +94,12 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
         binding.swipeRefreshLayout.setRefreshing(false);
         binding.gridView.setAdapter(new MovieAdapter(getActivity(), movies));
         binding.gridView.setOnScrollListener(new ScrollViewListener(getActivity()));
-        binding.gridView.setNumColumns(viewModel.getMasterDetailsPage().getValue() ? 3 : 2);
+        boolean isMasterDetailsPage = getActivity().findViewById(R.id.activity_main_root_container) != null;
+        binding.gridView.setNumColumns(isMasterDetailsPage ? 3 : 2);
+        if(isMasterDetailsPage) {
+            navigator.navigateTo(R.id.activity_main_details_container, DetailsFragment.Factory.newInstance(movies.get(0)), false);
+        }
         binding.gridView.setOnItemClickListener(this);
-        listener.onContentLoaded(movies);
-    }
-
-    interface OnContentLoadedListener {
-        void onContentLoaded(List<Movie> movies);
     }
 
 }

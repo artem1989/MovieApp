@@ -1,23 +1,21 @@
 package ua.inovecs.movieapp.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import java.util.List;
+import javax.inject.Inject;
 
-import ua.inovecs.movieapp.model.Movie;
+import dagger.android.support.DaggerAppCompatActivity;
 import ua.inovecs.movieapp.R;
 
-public class MainActivity extends AppCompatActivity implements GridFragment.OnContentLoadedListener {
+public class MainActivity extends DaggerAppCompatActivity implements DetailsFragment.OnToolbarDecoratorListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        navigator = new MainNavigator(getSupportFragmentManager());
-
-        int containerId = findViewById(R.id.activity_main_root_container) != null ? R.id.activity_main_grid_container : R.id.content_frame;
+        boolean isMasterDetailsPage = findViewById(R.id.activity_main_root_container) != null;
+        int containerId = isMasterDetailsPage ? R.id.activity_main_grid_container : R.id.content_frame;
         navigator.navigateTo(containerId, GridFragment.Factory.newInstance(), false);
     }
 
@@ -32,13 +30,15 @@ public class MainActivity extends AppCompatActivity implements GridFragment.OnCo
         }
     }
 
+    @Inject
+    MainNavigator navigator;
+
     @Override
-    public void onContentLoaded(List<Movie> movies) {
-        if (findViewById(R.id.activity_main_root_container) != null){
-            navigator.navigateTo(R.id.activity_main_details_container, DetailsFragment.Factory.newInstance(movies.get(0)), false);
+    public void decorate(DecorationInfo info) {
+        if (info.isShouldDecorate()) {
+            getSupportActionBar().setTitle(info.getTitleResourceId());
+            getSupportActionBar().setDisplayShowHomeEnabled(info.isShowBackArrow());
+            getSupportActionBar().setDisplayHomeAsUpEnabled(info.isShowBackArrow());
         }
-
     }
-
-    private MainNavigator navigator;
 }

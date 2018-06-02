@@ -23,6 +23,9 @@ ext {
     // Network
     okhttp3_version = "3.9.0"
     retrofit2_version = "2.3.0"
+
+    // di
+    dagger_version = "2.13"
 }
 
 allprojects {

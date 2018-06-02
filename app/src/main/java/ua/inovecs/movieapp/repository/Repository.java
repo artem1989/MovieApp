@@ -1,23 +1,26 @@
 package ua.inovecs.movieapp.repository;
 
-import android.app.Application;
-import android.content.Context;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.model.MovieResponse;
 import ua.inovecs.movieapp.model.VideoDetails;
 import ua.inovecs.movieapp.model.VideoResponse;
 
-import static ua.inovecs.movieapp.repository.ApiService.getRetrofit;
-
+@Singleton
 public class Repository {
 
     private static final String TAG = Repository.class.getSimpleName();
@@ -26,23 +29,21 @@ public class Repository {
     private static final String VIDEOS = "videos";
 
     private MovieApi api;
-    private OnResponseListener listener;
-    private OnVideoResponseListener onVideoResponseListener;
 
-    public Repository(Context context, OnResponseListener onResponseListener, OnVideoResponseListener listener) {
-        this.listener = onResponseListener;
-        this.onVideoResponseListener = listener;
-        api = getRetrofit(Data.BASE_URL, context).create(MovieApi.class);
+    @Inject
+    Repository(Retrofit retrofit) {
+        api = retrofit.create(MovieApi.class);
     }
 
-    public void fetchMovies() {
+    public LiveData<List<Movie>> fetchMovies() {
         Call<MovieResponse> call = api.getPopularMovies(Data.API_KEY);
+        MutableLiveData<List<Movie>> data = new MutableLiveData<>();
 
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 if (response.body() != null)
-                    listener.onResponse(response.body().getResults());
+                    data.postValue(response.body().getResults());
             }
 
             @Override
@@ -50,20 +51,23 @@ public class Repository {
                 Log.e(TAG, "Network error occured! " + t.getMessage());
             }
         });
+
+        return data;
     }
 
-    public void fetchMovieVideo(int movieId) {
+    public LiveData<VideoResponse> fetchMovieVideo(int movieId) {
         Map<String, String> params = new HashMap<>();
         params.put(API_KEY, Data.API_KEY);
         params.put(APPEND_TO_RESPONSE, VIDEOS);
 
         Call<VideoDetails> call = api.getVideoDetails(movieId, params);
+        MutableLiveData<VideoResponse> data = new MutableLiveData<>();
 
         call.enqueue(new Callback<VideoDetails>() {
             @Override
             public void onResponse(Call<VideoDetails> call, Response<VideoDetails> response) {
                 if (response.body() != null)
-                    onVideoResponseListener.onVideoResponse(response.body().getVideos());
+                    data.postValue(response.body().getVideos());
             }
 
             @Override
@@ -71,13 +75,7 @@ public class Repository {
                 Log.e(TAG, "Network error occured! " + t.getMessage());
             }
         });
-    }
 
-    public interface OnResponseListener {
-        void onResponse(List<Movie> movies);
-    }
-
-    public interface OnVideoResponseListener {
-        void onVideoResponse(VideoResponse response);
+        return data;
     }
 }

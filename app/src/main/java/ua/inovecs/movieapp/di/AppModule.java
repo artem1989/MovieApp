@@ -1,30 +1,50 @@
-package ua.inovecs.movieapp.repository;
+package ua.inovecs.movieapp.di;
 
+import android.app.Application;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.File;
 
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import ua.inovecs.movieapp.repository.Data;
 
-class ApiService {
+@Module
+public class AppModule {
 
     private static final int MAX_SIZE = 10 * 1024 * 1024;
     private static final int MAX_STALE = 60 * 60 * 24;
 
-    @NonNull
-    static Retrofit getRetrofit(String baseUrl, Context context) {
+    @Provides
+    Context providesContext(Application application) {
+        return application;
+    }
+
+    @Provides
+    @Singleton
+    SharedPreferences providesSharedPreferences(Application application) {
+        return PreferenceManager.getDefaultSharedPreferences(application);
+    }
+
+    @Provides
+    @Singleton
+    Retrofit providesRetrofit(Context context) {
         File httpCacheDirectory = new File(context.getCacheDir(), "httpCache");
         Cache cache = new Cache(httpCacheDirectory, MAX_SIZE);
 
         return new Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(Data.BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(new OkHttpClient.Builder()
@@ -43,6 +63,4 @@ class ApiService {
                         .build())
                 .build();
     }
-
-
 }

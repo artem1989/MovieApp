@@ -1,6 +1,8 @@
 package ua.inovecs.movieapp.ui;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +18,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.R;
 
@@ -24,10 +29,15 @@ import ua.inovecs.movieapp.model.VideoResponse;
 import ua.inovecs.movieapp.repository.Data;
 import ua.inovecs.movieapp.viewmodel.MovieViewModel;
 
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends DaggerFragment {
+
+    private static final String KEY = "movie";
+
+    @Inject
+    ViewModelProvider.Factory mModelFactory;
 
     private DetailsFragmentBinding binding;
-    private MovieViewModel viewModel;
+    OnToolbarDecoratorListener listener;
 
     public static class Factory {
         /**
@@ -45,11 +55,17 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(!viewModel.getMasterDetailsPage().getValue()) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.details);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        DecorationInfo info = new DecorationInfo();
+        info.setShouldDecorate(getActivity().findViewById(R.id.activity_main_root_container) == null);
+        info.setShowBackArrow(true);
+        info.setTitleResourceId(R.string.details);
+        listener.decorate(info);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (OnToolbarDecoratorListener) context;
     }
 
     @Override
@@ -60,9 +76,9 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DetailsFragmentBinding.inflate(inflater, container, false);
-        viewModel = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
+        MovieViewModel viewModel = ViewModelProviders.of(this, mModelFactory).get(MovieViewModel.class);
         viewModel.getVideoList().observe(this, this::updateRecyclerView);
-        Movie movie = (Movie) getArguments().getSerializable("movie");
+        Movie movie = (Movie) getArguments().getSerializable(KEY);
         viewModel.fetchMovieVideo(movie.getId());
         return binding.getRoot();
     }
@@ -70,25 +86,33 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Movie movie = (Movie) getArguments().getSerializable("movie");
+        Movie movie = (Movie) getArguments().getSerializable(KEY);
         Picasso.get().load(Data.BASE + movie.getBackDropPath())
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
                 .fit()
-                .tag(getActivity())
+                .tag(getContext())
                 .into(binding.logo);
         binding.description.setText(movie.getOverview());
         binding.rating.setText(String.format("%s%s", String.valueOf(movie.getVoteAverage()), getString(R.string.from)));
+        setYear(movie);
+        binding.toolbarView.setTitleTextColor(Color.parseColor("#FFFFFF"));
+        binding.toolbarView.setTitle(movie.getTitle());
+    }
+
+    private void setYear(Movie movie) {
         Calendar releaseDate = Calendar.getInstance();
         releaseDate.setTime(movie.getReleaseDate());
         binding.releaseYear.setText(String.valueOf(releaseDate.get(Calendar.YEAR)));
-        binding.toolbarView.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        binding.toolbarView.setTitle(movie.getTitle());
     }
 
     private void updateRecyclerView(VideoResponse response) {
         binding.trailers.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.trailers.setHasFixedSize(true);
         binding.trailers.setAdapter(new TrailersAdapter(response.getResults()));
+    }
+
+    interface OnToolbarDecoratorListener {
+        void decorate(DecorationInfo info);
     }
 }

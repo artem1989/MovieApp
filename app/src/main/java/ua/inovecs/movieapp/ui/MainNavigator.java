@@ -4,14 +4,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import javax.inject.Inject;
+
 import ua.inovecs.movieapp.R;
 
 public class MainNavigator {
 
     private FragmentManager fragmentManager;
 
-    MainNavigator(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    @Inject
+    MainNavigator(MainActivity activity) {
+        this.fragmentManager = activity.getSupportFragmentManager();
     }
 
     void navigateTo(int containerId, Fragment fragment, boolean addToBackStack) {

@@ -7,6 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+
 import ua.inovecs.movieapp.model.MovieResponse;
 import ua.inovecs.movieapp.model.VideoDetails;
 
@@ -20,6 +21,5 @@ public interface MovieApi {
 
     @GET("movie/{movie_id}")
     Call<VideoDetails> getVideoDetails(@Path(MOVIE_ID) int movieId, @QueryMap Map<String, String> options);
-
 
 }

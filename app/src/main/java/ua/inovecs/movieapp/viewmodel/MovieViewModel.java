@@ -3,25 +3,27 @@ package ua.inovecs.movieapp.viewmodel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.MediatorLiveData;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import ua.inovecs.movieapp.model.Movie;
 import ua.inovecs.movieapp.model.VideoResponse;
 import ua.inovecs.movieapp.repository.Repository;
 
-public class MovieViewModel extends AndroidViewModel implements Repository.OnResponseListener, Repository.OnVideoResponseListener{
+public class MovieViewModel extends AndroidViewModel {
 
     private Repository repository;
-    private MutableLiveData<List<Movie>> movieList = new MutableLiveData<>();
-    private MutableLiveData<VideoResponse> video = new MutableLiveData<>();
-    private MutableLiveData<Boolean> masterDetailsPage = new MutableLiveData<>();
 
-    public MovieViewModel(Application application) {
+    private MediatorLiveData<List<Movie>> movieList = new MediatorLiveData<>();
+    private MediatorLiveData<VideoResponse> video = new MediatorLiveData<>();
+
+    @Inject
+    MovieViewModel(Application application, Repository repository) {
         super(application);
-        this.repository = new Repository(application.getApplicationContext(),this, this);
+        this.repository = repository;
     }
 
     public LiveData<List<Movie>> getMovieList() {
@@ -32,25 +34,14 @@ public class MovieViewModel extends AndroidViewModel implements Repository.OnRes
         return video;
     }
 
-    public MutableLiveData<Boolean> getMasterDetailsPage() {
-        return masterDetailsPage;
-    }
-
-    public void fetchMovies() {
-        repository.fetchMovies();
+    public LiveData<List<Movie>> fetchMovies() {
+        movieList.addSource(repository.fetchMovies(), data -> movieList.setValue(data));
+        return movieList;
     }
 
     public void fetchMovieVideo(int movieId) {
+        video.addSource(repository.fetchMovieVideo(movieId), data -> video.setValue(data));
         repository.fetchMovieVideo(movieId);
     }
 
-    @Override
-    public void onResponse(List<Movie> movies) {
-        movieList.setValue(movies);
-    }
-
-    @Override
-    public void onVideoResponse(VideoResponse response) {
-        video.setValue(response);
-    }
 }
